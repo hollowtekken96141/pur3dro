@@ -6,6 +6,7 @@
   <title>PUR3DRO</title>
   <link rel="icon" type="image/jpeg" href="images/fav.jpg" />
   <style>
+    /* ── WEBSITE BY HOLLOWTEKKEN96141 -IG @everything_i_surrendered @2swords2 Swords2 words are swords ── */
     /* ── Reset & base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -95,7 +96,7 @@
       justify-content: center;
       padding: 24px;
       gap: 20px;
-      background: #fff;
+      background: #fdfdfb;
     }
 
     #video-panel h2 {
@@ -137,7 +138,7 @@
         width: 100%;
         height: 70vh;
         border-right: none;
-        border-bottom: 2px solid #ccc;
+        border-bottom: 2px solid #fff;
       }
 
       #video-panel {
@@ -150,7 +151,7 @@
   </style>
 </head>
 <body>
-
+<!-- ── WEBSITE BY HOLLOWTEKKEN96141 -IG @everything_i_surrendered @2swords2 Swords2 words are swords ── -->
   <!-- ── Floating wave title ── -->
   <div id="wave-title">
     <span>P</span><span>U</span><span>R</span><span>3</span><span>D</span><span>R</span><span>O</span>
@@ -187,6 +188,23 @@
   </div>
 
   <style>
+    .floaty-three {
+      position: fixed;
+      pointer-events: none;
+      z-index: 50;
+      font-weight: 900;
+      color: #fff;
+      opacity: 0;
+      animation: fadeThree 4s ease-out forwards;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      line-height: 1;
+    }
+
+    @keyframes fadeThree {
+      0%   { opacity: 0.7; }
+      100% { opacity: 0; }
+    }
+
     .explosion {
       position: fixed;
       pointer-events: none;
@@ -199,6 +217,32 @@
   </style>
 
   <script>
+    // ── Floating "3" spawner ──
+    function spawnThree() {
+      const el = document.createElement('span');
+      el.textContent = '3';
+      el.className = 'floaty-three';
+
+      const size = Math.random() * 60 + 8;          // 20px – 140px
+      const x    = Math.random() * window.innerWidth;
+      const y    = Math.random() * window.innerHeight;
+      const rot  = Math.random() * 0 - 1;          // -180° – 180°
+      const dur  = Math.random() * 4 + 1;              // 3s – 7s fade
+
+      el.style.fontSize  = size + 'px';
+      el.style.left      = x + 'px';
+      el.style.top       = y + 'px';
+      el.style.transform = `translate(-50%,-50%) rotate(${rot}deg)`;
+      el.style.animationDuration = dur + 's';
+
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), dur * 1000);
+
+      // schedule next spawn between 300ms and 1800ms
+      setTimeout(spawnThree, Math.random() * 150 + 30);
+    }
+    spawnThree();
+
     document.addEventListener('click', function (e) {
       const img = document.createElement('img');
       // Cache-bust so the GIF always restarts from frame 1
