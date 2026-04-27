@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PUR3DRO</title>
+  <link rel="icon" type="image/jpeg" href="images/fav.jpg" />
   <style>
     /* ── Reset & base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,7 +13,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #fdfdfb;
+      background: #fff;
       color: #000;
       font-family: 'Segoe UI', Arial, sans-serif;
     }
@@ -36,10 +37,9 @@
       font-weight: 900;
       letter-spacing: 0.1em;
       color: #000;
-      animation: wave 4.0s ease-in-out infinite;
+      animation: wave 1.6s ease-in-out infinite;
     }
 
-    /* stagger each letter */
     #wave-title span:nth-child(1) { animation-delay: 0.00s; }
     #wave-title span:nth-child(2) { animation-delay: 0.12s; }
     #wave-title span:nth-child(3) { animation-delay: 0.24s; }
@@ -106,7 +106,7 @@
       color: #000;
     }
 
-    /* iframe wrapper keeps 16:9, fills available width */
+    /* iframe wrapper keeps 16:9 */
     #player-wrapper {
       width: 100%;
       aspect-ratio: 16 / 9;
@@ -117,38 +117,6 @@
       height: 100%;
       border: none;
       display: block;
-    }
-
-    /* ── Arrow controls ── */
-    #controls {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-    }
-
-    .arrow-btn {
-      background: none;
-      border: 2px solid #000;
-      color: #000;
-      font-size: 1.6rem;
-      width: 52px;
-      height: 52px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    .arrow-btn:hover {
-      background: #000;
-      color: #fff;
-    }
-
-    #video-counter {
-      font-size: 0.95rem;
-      color: #333;
-      letter-spacing: 0.06em;
     }
 
     /* ── Mobile layout ── */
@@ -202,111 +170,45 @@
       </a>
     </div>
 
-    <!-- Right: YouTube playlist -->
+    <!-- Right: YouTube playlist embed -->
     <div id="video-panel">
       <h2>Video Portfolio</h2>
 
       <div id="player-wrapper">
         <iframe
-          id="yt-iframe"
-          src=""
-          allow="autoplay; encrypted-media"
+          src="https://www.youtube.com/embed/videoseries?list=PLD-EabPXLv9xm3YataYP7HeTcF44ekeC_&autoplay=1&rel=0"
+          allow="autoplay; encrypted-media; fullscreen"
           allowfullscreen
           title="PUR3DRO Video Portfolio">
         </iframe>
-      </div>
-
-      <div id="controls">
-        <button class="arrow-btn" id="btn-prev" title="Previous video">&#8592;</button>
-        <span id="video-counter">1 / 1</span>
-        <button class="arrow-btn" id="btn-next" title="Next video">&#8594;</button>
       </div>
     </div>
 
   </div>
 
+  <style>
+    .explosion {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      width: 160px;
+      height: 160px;
+      transform: translate(-50%, -50%);
+      image-rendering: auto;
+    }
+  </style>
+
   <script>
-    const PLAYLIST_ID = 'PLD-EabPXLv9xm3YataYP7HeTcF44ekeC_';
-
-    let player;
-    let playlistItems = [];
-    let currentIndex  = 0;
-
-    const tag = document.createElement('script');
-    tag.src   = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(tag);
-
-    window.onYouTubeIframeAPIReady = function () {
-      player = new YT.Player('yt-iframe', {
-        height : '100%',
-        width  : '100%',
-        playerVars: {
-          listType      : 'playlist',
-          list          : PLAYLIST_ID,
-          autoplay      : 1,
-          mute          : 0,
-          index         : 0,
-          rel           : 0,
-          modestbranding: 1,
-          enablejsapi   : 1,
-        },
-        events: {
-          onReady      : onPlayerReady,
-          onStateChange: onPlayerStateChange,
-        }
-      });
-    };
-
-    function onPlayerReady(event) {
-      setTimeout(loadPlaylistData, 1200);
-      event.target.playVideo();
-    }
-
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.ENDED) {
-        navigate(1);
-      }
-    }
-
-    function loadPlaylistData() {
-      try {
-        const data = player.getPlaylist();
-        if (data && data.length) {
-          playlistItems = data;
-          currentIndex  = player.getPlaylistIndex();
-          updateCounter();
-        } else {
-          setTimeout(loadPlaylistData, 1500);
-        }
-      } catch (e) {
-        setTimeout(loadPlaylistData, 1500);
-      }
-    }
-
-    function navigate(direction) {
-      if (!player) return;
-      if (playlistItems.length > 0) {
-        currentIndex = (currentIndex + direction + playlistItems.length) % playlistItems.length;
-        player.playVideoAt(currentIndex);
-        updateCounter();
-      } else {
-        if (direction > 0) player.nextVideo();
-        else               player.previousVideo();
-        setTimeout(() => {
-          currentIndex = player.getPlaylistIndex();
-          updateCounter();
-        }, 800);
-      }
-    }
-
-    function updateCounter() {
-      const total = playlistItems.length || '?';
-      const cur   = playlistItems.length ? currentIndex + 1 : '?';
-      document.getElementById('video-counter').textContent = `${cur} / ${total}`;
-    }
-
-    document.getElementById('btn-prev').addEventListener('click', () => navigate(-1));
-    document.getElementById('btn-next').addEventListener('click', () => navigate(1));
+    document.addEventListener('click', function (e) {
+      const img = document.createElement('img');
+      // Cache-bust so the GIF always restarts from frame 1
+      img.src = 'images/explosion.gif?t=' + Date.now();
+      img.className = 'explosion';
+      img.style.left = e.clientX + 'px';
+      img.style.top  = e.clientY + 'px';
+      document.body.appendChild(img);
+      setTimeout(() => img.remove(), 780);
+    });
   </script>
 </body>
 </html>
