@@ -227,7 +227,6 @@
 
   <script>
     const PLAYLIST_ID = 'PLD-EabPXLv9xm3YataYP7HeTcF44ekeC_';
-    const FIRST_VIDEO  = 'etL-RuQ2aGo';
 
     let player;
     let playlistItems = [];
@@ -241,12 +240,12 @@
       player = new YT.Player('yt-iframe', {
         height : '100%',
         width  : '100%',
-        videoId: FIRST_VIDEO,
         playerVars: {
           listType      : 'playlist',
           list          : PLAYLIST_ID,
           autoplay      : 1,
           mute          : 0,
+          index         : 0,
           rel           : 0,
           modestbranding: 1,
           enablejsapi   : 1,
